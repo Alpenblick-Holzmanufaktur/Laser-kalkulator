@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Laser Kalkulator – Alpenblick Holzmanufaktur</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Mukta:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f5f2;
+    --surface: #ffffff;
+    --surface2: #f2efe9;
+    --border: #ddd8cf;
+    --accent: #662843;
+    --accent-light: #f9f0f3;
+    --accent-dark: #4d1e32;
+    --text: #1a1714;
+    --muted: #7a6e66;
+    --subtle: #b0a89e;
+    --success: #2d6e4a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Mukta', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    min-height: 100vh;
+    padding: 56px 20px 100px;
+  }
+
+  .container {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  header {
+    margin-bottom: 48px;
+    text-align: center;
+  }
+
+  .header-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .header-eyebrow::before,
+  .header-eyebrow::after {
+    content: '';
+    display: inline-block;
+    width: 32px; height: 1.5px;
+    background: var(--accent);
+    opacity: 0.5;
+  }
+
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+    margin-bottom: 12px;
+  }
+
+  header p {
+    color: var(--muted);
+    font-size: 15px;
+    font-weight: 400;
+  }
+
+  .section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 30px 30px 26px;
+    margin-bottom: 14px;
+    box-shadow: 0 2px 8px rgba(102,40,67,0.06);
+  }
+
+  .section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section h2 .icon { font-size: 1.1rem; }
+
+  .field { margin-bottom: 16px; }
+
+  label {
+    display: block;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+  }
+
+  input[type="number"], select {
+    width: 100%;
+    background: var(--surface2);
+    border: 1.5px solid var(--border);
+    color: var(--text);
+    font-family: 'Mukta', sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    padding: 10px 14px;
+    border-radius: 5px;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    appearance: none;
+  }
+
+  input[type="number"]:focus, select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(102,40,67,0.1);
+  }
+
+  input[type="number"]::placeholder { color: var(--subtle); }
+
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  .radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .radio-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 16px;
+    background: var(--surface2);
+    border: 1.5px solid var(--border);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+  }
+
+  .radio-option:hover { border-color: var(--accent); background: var(--accent-light); }
+  .radio-option.selected {
+    border-color: var(--accent);
+    background: var(--accent-light);
+  }
+
+  .radio-option input { display: none; }
+
+  .radio-dot {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    transition: all 0.15s;
+    background: white;
+  }
+
+  .radio-option.selected .radio-dot {
+    border-color: var(--accent);
+    background: var(--accent);
+    box-shadow: 0 0 0 3px rgba(102,40,67,0.15);
+  }
+
+  .radio-label { flex: 1; }
+  .radio-label strong { display: block; font-size: 14px; font-weight: 700; color: var(--text); }
+  .radio-label span { font-size: 13px; color: var(--muted); font-weight: 400; }
+  .radio-price { color: var(--accent); font-size: 13px; font-weight: 700; }
+
+  .laser-calc {
+    background: var(--surface2);
+    border: 1.5px solid var(--border);
+    border-radius: 5px;
+    padding: 18px;
+    margin-top: 14px;
+  }
+
+  .laser-calc h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 14px;
+  }
+
+  .time-display {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-top: 10px;
+    padding: 14px 18px;
+    background: white;
+    border-radius: 5px;
+    border: 1px solid var(--border);
+  }
+
+  .time-display .value {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.4rem;
+    color: var(--accent);
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .time-display .unit { color: var(--muted); font-size: 13px; font-weight: 400; }
+
+  .hint-box {
+    background: white;
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 5px 5px 0;
+    padding: 10px 14px;
+    margin-top: 12px;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .hint-box strong { color: var(--text); font-weight: 700; }
+
+  .material-density {
+    margin-top: 10px;
+    padding: 10px 14px;
+    background: var(--surface2);
+    border-radius: 5px;
+    font-size: 13px;
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+
+  .material-density span { color: var(--text); font-weight: 700; }
+
+  select option { background: white; }
+
+  /* Result panel */
+  .result {
+    background: var(--accent);
+    border-radius: 5px;
+    padding: 36px;
+    margin-top: 20px;
+    position: relative;
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(102,40,67,0.25);
+  }
+
+  .result-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 20px;
+  }
+
+  .line-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+  }
+
+  .line-item:last-of-type { border-bottom: none; }
+  .line-item .desc { color: rgba(255,255,255,0.6); font-size: 14px; font-weight: 400; }
+  .line-item .amount { font-weight: 700; font-size: 14px; color: #fff; }
+
+  .total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,0.25);
+  }
+
+  .total-label {
+    font-size: 12px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .total-amount {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.8rem;
+    font-weight: 900;
+    color: #fff;
+    line-height: 1;
+  }
+
+  .result-footer {
+    margin-top: 16px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.35);
+    text-align: right;
+    font-weight: 400;
+  }
+
+  /* Tiefenregler */
+  .depth-slider-wrap {
+    margin: 8px 0 18px;
+  }
+
+  .depth-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--subtle);
+    margin-bottom: 8px;
+  }
+
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 5px;
+    border-radius: 3px;
+    background: linear-gradient(to right, var(--accent), #b06080, var(--border));
+    outline: none;
+    cursor: pointer;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 3px solid white;
+    box-shadow: 0 2px 8px rgba(102,40,67,0.35);
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+
+  input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.15);
+    box-shadow: 0 3px 12px rgba(102,40,67,0.45);
+  }
+
+  input[type="range"]::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 3px solid white;
+    box-shadow: 0 2px 8px rgba(102,40,67,0.35);
+    cursor: pointer;
+  }
+
+  .depth-ticks {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--subtle);
+    margin-top: 6px;
+    padding: 0 2px;
+  }
+
+  .laser-params {
+    background: var(--surface2);
+    border: 1.5px solid var(--border);
+    border-radius: 5px;
+    padding: 18px;
+    margin-top: 4px;
+  }
+
+  .lp-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .lp-card {
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 5px;
+    padding: 12px 10px 10px;
+    text-align: center;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .lp-card.highlight {
+    border-color: var(--accent);
+    background: var(--accent-light);
+  }
+
+  .lp-icon { font-size: 1.1rem; margin-bottom: 4px; }
+  .lp-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 4px; }
+  .lp-value { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; color: var(--text); line-height: 1; }
+  .lp-unit { font-size: 9px; color: var(--subtle); margin-top: 2px; font-weight: 400; }
+
+  .lp-desc {
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 400;
+    line-height: 1.6;
+    padding: 8px 0 6px;
+    border-top: 1px solid var(--border);
+  }
+
+  .lp-zeitfaktor {
+    font-size: 12px;
+    color: var(--success);
+    font-weight: 700;
+    padding-top: 6px;
+    border-top: 1px solid var(--border);
+    margin-top: 4px;
+  }
+
+  @media (max-width: 500px) {
+    .grid-3 { grid-template-columns: 1fr; }
+    .grid-2 { grid-template-columns: 1fr; }
+    .lp-row { grid-template-columns: repeat(2, 1fr); }
+    .section { padding: 20px 16px; }
+    .result { padding: 24px 20px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="header-eyebrow">Alpenblick Holzmanufaktur</div>
+    <h1>Preiskalkulator</h1>
+    <p>Individuelle Lasergravur · transparent & fair kalkuliert</p>
+  </header>
+
+  <!-- LASERZEIT -->
+  <div class="section">
+    <h2><span class="icon">⏱</span> Gravurzeit schätzen</h2>
+    <div class="grid-2">
+      <div class="field">
+        <label>Gravurfläche — Breite (mm)</label>
+        <input type="number" id="gravurBreite" placeholder="100" value="100" min="1" oninput="calc()">
+      </div>
+      <div class="field">
+        <label>Gravurfläche — Höhe (mm)</label>
+        <input type="number" id="gravurHoehe" placeholder="80" value="80" min="1" oninput="calc()">
+      </div>
+    </div>
+
+    <div class="laser-calc">
+      <h3>⚡ Motivart wählen</h3>
+      <div class="radio-group" id="motivArt">
+        <label class="radio-option selected" onclick="selectRadio('motivArt', this, 'text')">
+          <input type="radio" name="motiv" value="text" checked>
+          <span class="radio-dot"></span>
+          <span class="radio-label"><strong>Text / Schriftzug</strong><span>Name, Datum, kurzer Spruch</span></span>
+        </label>
+        <label class="radio-option" onclick="selectRadio('motivArt', this, 'logo')">
+          <input type="radio" name="motiv" value="logo">
+          <span class="radio-dot"></span>
+          <span class="radio-label"><strong>Logo / einfache Grafik</strong><span>Klares Motiv, wenig Füllfläche</span></span>
+        </label>
+        <label class="radio-option" onclick="selectRadio('motivArt', this, 'detail')">
+          <input type="radio" name="motiv" value="detail">
+          <span class="radio-dot"></span>
+          <span class="radio-label"><strong>Detailreiches Motiv</strong><span>Viel Füllfläche, feine Strukturen</span></span>
+        </label>
+        <label class="radio-option" onclick="selectRadio('motivArt', this, 'foto')">
+          <input type="radio" name="motiv" value="foto">
+          <span class="radio-dot"></span>
+          <span class="radio-label"><strong>Foto / Rastergravur</strong><span>Vollflächige Gravur, höchste Dichte</span></span>
+        </label>
+      </div>
+
+      <div class="time-display" style="margin-top:14px">
+        <span class="value" id="zeitAnzeige">--</span>
+        <span class="unit">Minuten geschätzte Gravurzeit</span>
+      </div>
+
+      <!-- KALIBRIERUNG: 130×600 mm, Text+Ornament, Diodenlaser → 90 min gemessen.
+           Tipp: Nach echtem Testlauf die Zeit manuell überschreiben für genauesten Preis. -->
+    </div>
+
+    <div class="field" style="margin-top:16px">
+      <label>Gravurzeit manuell überschreiben (Minuten)</label>
+      <input type="number" id="zeitManuell" placeholder="Leer = Schätzung verwenden" min="0" step="0.5" oninput="calc()">
+    </div>
+  </div>
+
+  <!-- MATERIAL -->
+  <div class="section">
+    <h2><span class="icon">🪵</span> Material</h2>
+    <div class="field">
+      <label>Materialquelle</label>
+      <div class="radio-group" id="materialQuelle">
+        <label class="radio-option selected" onclick="selectRadio('materialQuelle', this, 'eigen')">
+          <input type="radio" name="matq" value="eigen" checked>
+          <span class="radio-dot"></span>
+          <span class="radio-label"><strong>Mitgebracht (Kundenaterial)</strong><span>Kein Aufpreis</span></span>
+          <span class="radio-price">0,00 €</span>
+        </label>
+        <label class="radio-option" onclick="selectRadio('materialQuelle', this, 'werkstatt')">
+          <input type="radio" name="matq" value="werkstatt">
+          <span class="radio-dot"></span>
+          <span class="radio-label"><strong>Aus der Werkstatt</strong><span>Berechnung nach Maß & Holzart</span></span>
+          <span class="radio-price">→ Maße eingeben</span>
+        </label>
+      </div>
+    </div>
+
+    <div id="materialDetails" style="display:none">
+      <div class="grid-3">
+        <div class="field">
+          <label>Höhe H (mm)</label>
+          <input type="number" id="matH" placeholder="200" min="1" oninput="calc()">
+        </div>
+        <div class="field">
+          <label>Breite B (mm)</label>
+          <input type="number" id="matB" placeholder="300" min="1" oninput="calc()">
+        </div>
+        <div class="field">
+          <label>Tiefe T (mm)</label>
+          <input type="number" id="matT" placeholder="20" min="1" oninput="calc()">
+        </div>
+      </div>
+      <div class="field">
+        <label>Holzart</label>
+        <select id="holzart" oninput="calc()">
+          <option value="0.005">Kiefer — 5,00 €/dm³</option>
+          <option value="0.008" selected>Eiche — 8,00 €/dm³</option>
+          <option value="0.007">Buche — 7,00 €/dm³</option>
+          <option value="0.020">⭐ Alte Kiefer (200 Jahre) — 20,00 €/dm³</option>
+        </select>
+      </div>
+      <div id="materialPreisAnzeige" class="material-density" style="display:none">
+        Volumen: <span id="volumen">—</span> dm³ → Materialpreis: <span id="matPreis">—</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- GESTALTUNG -->
+  <div class="section">
+    <h2><span class="icon">✏️</span> Gestaltung & Datenaufbereitung</h2>
+    <div class="radio-group" id="gestaltung">
+      <label class="radio-option selected" onclick="selectRadio('gestaltung', this, 0)">
+        <input type="radio" name="gest" value="0" checked>
+        <span class="radio-dot"></span>
+        <span class="radio-label"><strong>Inklusive</strong><span>Einfacher Text, Name, Datum, kurzer Spruch</span></span>
+        <span class="radio-price">0,00 €</span>
+      </label>
+      <label class="radio-option" onclick="selectRadio('gestaltung', this, 10)">
+        <input type="radio" name="gest" value="10">
+        <span class="radio-dot"></span>
+        <span class="radio-label"><strong>Einfache Anpassung</strong><span>Vorhandene Grafik anpassen / einfache Gestaltung</span></span>
+        <span class="radio-price">ab 10,00 €</span>
+      </label>
+      <label class="radio-option" onclick="selectRadio('gestaltung', this, 'custom')">
+        <input type="radio" name="gest" value="custom">
+        <span class="radio-dot"></span>
+        <span class="radio-label"><strong>Aufwendige Gestaltung</strong><span>Neues Motiv, komplex — Preis nach Absprache</span></span>
+        <span class="radio-price">individuell</span>
+      </label>
+    </div>
+    <div class="field" style="margin-top:12px;display:none" id="gestaltungCustomField">
+      <label>Abgesprochener Preis (€)</label>
+      <input type="number" id="gestaltungCustom" placeholder="0.00" min="0" step="0.5" oninput="calc()">
+    </div>
+  </div>
+
+  <!-- GRAVURTIEFE -->
+  <div class="section">
+    <h2><span class="icon">🎚️</span> Gravurtiefe & Laser-Einstellungen</h2>
+    <p style="font-size:12px;color:var(--muted);font-weight:300;margin-bottom:18px;line-height:1.7">
+      Eichbasis: <strong style="color:var(--text)">Speed 4000 · Power 90% · Tiefe 100%</strong>. 
+      Geringere Tiefe = höhere Geschwindigkeit = kürzere Gravurzeit = günstigerer Preis.
+    </p>
+
+    <div class="depth-slider-wrap">
+      <div class="depth-labels">
+        <span>Oberflächlich</span>
+        <span>Standard</span>
+        <span>Tief</span>
+      </div>
+      <input type="range" id="tiefenRegler" min="1" max="5" step="1" value="5" oninput="updateTiefe()">
+      <div class="depth-ticks">
+        <span>20%</span><span>40%</span><span>60%</span><span>80%</span><span>100%</span>
+      </div>
+    </div>
+
+    <div class="laser-params" id="laserParams">
+      <div class="lp-row">
+        <div class="lp-card" id="lp_tiefe_card">
+          <div class="lp-icon">📏</div>
+          <div class="lp-label">Gravurtiefe</div>
+          <div class="lp-value" id="lp_tiefe">100%</div>
+        </div>
+        <div class="lp-card">
+          <div class="lp-icon">⚡</div>
+          <div class="lp-label">Speed</div>
+          <div class="lp-value" id="lp_speed">4000</div>
+          <div class="lp-unit">mm/min</div>
+        </div>
+        <div class="lp-card">
+          <div class="lp-icon">🔆</div>
+          <div class="lp-label">Power</div>
+          <div class="lp-value" id="lp_power">90</div>
+          <div class="lp-unit">%</div>
+        </div>
+        <div class="lp-card">
+          <div class="lp-icon">🔁</div>
+          <div class="lp-label">Durchgänge</div>
+          <div class="lp-value" id="lp_passes">1</div>
+          <div class="lp-unit">Pass</div>
+        </div>
+      </div>
+      <div class="lp-desc" id="lp_desc">Maximale Tiefe. Kalibrierter Standardwert für satte, tiefe Gravur.</div>
+      <div class="lp-zeitfaktor" id="lp_zeitinfo">⏱ Zeitfaktor: ×1,00 — keine Änderung gegenüber Basiszeit</div>
+    </div>
+  </div>
+
+  <!-- ERGEBNIS -->
+  <div class="result" id="result">
+    <div class="result-label">Preisübersicht</div>
+    <div class="line-item">
+      <span class="desc">⏱ Gravurzeit (<span id="r_zeit">—</span> min × 1,20 €)</span>
+      <span class="amount" id="r_gravur">—</span>
+    </div>
+    <div class="line-item">
+      <span class="desc">🔧 Einrichtungspauschale</span>
+      <span class="amount">5,00 €</span>
+    </div>
+    <div class="line-item">
+      <span class="desc">🪵 Material</span>
+      <span class="amount" id="r_material">0,00 €</span>
+    </div>
+    <div class="line-item">
+      <span class="desc">✏️ Gestaltung</span>
+      <span class="amount" id="r_gestaltung">0,00 €</span>
+    </div>
+    <div class="total-row">
+      <span class="total-label">Gesamt (netto)</span>
+      <span class="total-amount" id="r_total">—</span>
+    </div>
+    <div class="result-footer">zzgl. gesetzlicher MwSt. · Aufwendige Gestaltung auf Anfrage</div>
+  </div>
+</div>
+
+<script>
+  // Tiefenstufen: Energiedichte E ~ Power/Speed (normiert auf Stufe 5 = 100%)
+  // Referenz: Speed 4000, Power 90 → E = 90/4000 = 0.02250
+  const tiefenStufen = [
+    { tiefe: 20, speed: 10000, power: 50, passes: 1, zeitFaktor: 0.40,
+      desc: 'Sehr oberflächliche Markierung. Nur leichte Tönung, kein Tiefenrelief. Für empfindliche Materialien oder rein optische Kennzeichnung.' },
+    { tiefe: 40, speed: 8000,  power: 65, passes: 1, zeitFaktor: 0.55,
+      desc: 'Flache Gravur. Deutlich sichtbar, aber wenig Tiefe. Gut für Geschenkartikel, bei denen Optik wichtiger als Haptik ist.' },
+    { tiefe: 60, speed: 6500,  power: 75, passes: 1, zeitFaktor: 0.70,
+      desc: 'Mittlere Gravurtiefe. Gutes Preis-Leistungs-Verhältnis. Empfohlen für die meisten Standard-Aufträge.' },
+    { tiefe: 80, speed: 5000,  power: 85, passes: 1, zeitFaktor: 0.85,
+      desc: 'Tiefe Gravur mit klarem Tiefenrelief. Hochwertiges Ergebnis, spürbar mit dem Finger. Ideal für Geschenke und Qualitätsprodukte.' },
+    { tiefe: 100, speed: 4000, power: 90, passes: 1, zeitFaktor: 1.00,
+      desc: 'Maximale Tiefe. Kalibrierter Standardwert für satte, tiefe Gravur. Bestmögliches Ergebnis auf Holz.' },
+  ];
+
+  let aktTiefenstufe = 5; // 1–5
+
+  function updateTiefe() {
+    aktTiefenstufe = parseInt(document.getElementById('tiefenRegler').value);
+    const s = tiefenStufen[aktTiefenstufe - 1];
+
+    document.getElementById('lp_tiefe').textContent = s.tiefe + '%';
+    document.getElementById('lp_speed').textContent = s.speed.toLocaleString('de');
+    document.getElementById('lp_power').textContent = s.power;
+    document.getElementById('lp_passes').textContent = s.passes;
+    document.getElementById('lp_desc').textContent = s.desc;
+
+    const einsparung = Math.round((1 - s.zeitFaktor) * 100);
+    const zeitText = s.zeitFaktor === 1
+      ? '⏱ Zeitfaktor: ×1,00 — keine Änderung gegenüber Basiszeit'
+      : `⏱ Zeitfaktor: ×${s.zeitFaktor.toFixed(2)} — ca. ${einsparung}% schneller → günstigerer Preis`;
+    document.getElementById('lp_zeitinfo').textContent = zeitText;
+    document.getElementById('lp_zeitinfo').style.color = s.zeitFaktor < 1 ? 'var(--success)' : 'var(--muted)';
+
+    // Karten highlighten wenn nicht Standard
+    document.querySelectorAll('.lp-card').forEach(c => c.classList.remove('highlight'));
+    if (s.zeitFaktor !== 1) {
+      document.querySelectorAll('.lp-card').forEach(c => c.classList.add('highlight'));
+    }
+
+    calc();
+  }
+
+  let selectedRadios = { materialQuelle: 'eigen', gestaltung: 0, motivArt: 'text' };
+
+  // Kalibrierungsreferenz: 130×600 mm, Text+Ornament → 90 min (Diodenlaser)
+  // Basisformel ergibt für diesen Fall ~17,9 min → Korrekturfaktor: 90/17,9 ≈ 5.03
+  // Faktoren wurden entsprechend skaliert; linien = Zeilenabstand in mm (kleiner = mehr Linien = mehr Zeit)
+  const motivFaktoren = {
+    text:   { dichte: 3.00, linien: 0.3 },   // kalibriert auf 90 min @ 130×600
+    logo:   { dichte: 5.25, linien: 0.2 },   // mehr Füllfläche als Text
+    detail: { dichte: 9.75, linien: 0.15 },  // viel Füllfläche
+    foto:   { dichte: 14.75, linien: 0.1 },  // vollflächige Rastergravur
+  };
+
+  function selectRadio(group, el, value) {
+    document.querySelectorAll(`#${group} .radio-option`).forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedRadios[group] = value;
+
+    if (group === 'materialQuelle') {
+      document.getElementById('materialDetails').style.display = value === 'werkstatt' ? 'block' : 'none';
+    }
+    if (group === 'gestaltung') {
+      document.getElementById('gestaltungCustomField').style.display = value === 'custom' ? 'block' : 'none';
+    }
+    calc();
+  }
+
+  function estimateLaserTime() {
+    const w = parseFloat(document.getElementById('gravurBreite').value) || 100;
+    const h = parseFloat(document.getElementById('gravurHoehe').value) || 80;
+    const motiv = selectedRadios.motivArt || 'text';
+    const { dichte, linien } = motivFaktoren[motiv];
+
+    const anzahlLinien = h / linien;
+    const linieLaenge = w * dichte;
+    const fahrstrecke = anzahlLinien * linieLaenge;
+    const gesamtFahrt = fahrstrecke * 1.25;
+    const speed = 200; // Standard mm/s
+    const sekunden = gesamtFahrt / speed;
+    const extra = anzahlLinien * 0.05;
+    const total = (sekunden + extra) / 60;
+
+    return Math.max(0.5, total);
+  }
+
+  function fmt(n) {
+    return n.toFixed(2).replace('.', ',') + ' €';
+  }
+
+  function calc() {
+    // Tiefenfaktor
+    const tiefenFaktor = tiefenStufen[aktTiefenstufe - 1].zeitFaktor;
+
+    // Laserzeit
+    const manuelleZeit = document.getElementById('zeitManuell').value;
+    const geschaetzteZeit = estimateLaserTime() * tiefenFaktor;
+    const zeitBasis = manuelleZeit ? parseFloat(manuelleZeit) : estimateLaserTime();
+    const zeit = manuelleZeit ? zeitBasis * tiefenFaktor : geschaetzteZeit;
+
+    document.getElementById('zeitAnzeige').textContent = geschaetzteZeit.toFixed(1);
+
+    // Gravurkosten
+    const gravurKosten = zeit * 1.20;
+
+    // Material
+    let materialKosten = 0;
+    if (selectedRadios.materialQuelle === 'werkstatt') {
+      const h = parseFloat(document.getElementById('matH').value) || 0;
+      const b = parseFloat(document.getElementById('matB').value) || 0;
+      const t = parseFloat(document.getElementById('matT').value) || 0;
+      const preisProMm3 = parseFloat(document.getElementById('holzart').value);
+      if (h && b && t) {
+        const volMm3 = h * b * t;
+        const volDm3 = volMm3 / 1000000;
+      const preisProDm3 = parseFloat(document.getElementById('holzart').value) * 1000;
+        materialKosten = volDm3 * preisProDm3;
+        document.getElementById('volumen').textContent = volDm3.toFixed(3);
+        document.getElementById('matPreis').textContent = fmt(materialKosten);
+        document.getElementById('materialPreisAnzeige').style.display = 'block';
+      }
+    } else {
+      document.getElementById('materialPreisAnzeige').style.display = 'none';
+    }
+
+    // Gestaltung
+    let gestaltungKosten = 0;
+    const g = selectedRadios.gestaltung;
+    if (g === 'custom') {
+      gestaltungKosten = parseFloat(document.getElementById('gestaltungCustom').value) || 0;
+    } else {
+      gestaltungKosten = parseFloat(g) || 0;
+    }
+
+    // Summe
+    const einrichtung = 5.00;
+    const total = gravurKosten + einrichtung + materialKosten + gestaltungKosten;
+
+    // Anzeige
+    document.getElementById('r_zeit').textContent = zeit.toFixed(1);
+    document.getElementById('r_gravur').textContent = fmt(gravurKosten);
+    document.getElementById('r_material').textContent = fmt(materialKosten);
+    document.getElementById('r_gestaltung').textContent = g === 'custom' && gestaltungKosten === 0
+      ? 'nach Absprache'
+      : fmt(gestaltungKosten);
+    document.getElementById('r_total').textContent = g === 'custom' && gestaltungKosten === 0
+      ? 'auf Anfrage'
+      : fmt(total);
+  }
+
+  updateTiefe();
+</script>
+</body>
+</html>
