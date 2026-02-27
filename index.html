@@ -452,7 +452,7 @@
 
   <!-- LASERZEIT -->
   <div class="section">
-    <h2><span class="icon">⏱</span> Gravurzeit schätzen</h2>
+    <h2><span class="icon"></span> Gravurzeit schätzen</h2>
     <div class="grid-2">
       <div class="field">
         <label>Gravurfläche — Breite (mm)</label>
@@ -465,7 +465,7 @@
     </div>
 
     <div class="laser-calc">
-      <h3>⚡ Motivart wählen</h3>
+      <h3>Motivart wählen</h3>
       <div class="radio-group" id="motivArt">
         <label class="radio-option selected" onclick="selectRadio('motivArt', this, 'text')">
           <input type="radio" name="motiv" value="text" checked>
@@ -506,7 +506,7 @@
 
   <!-- MATERIAL -->
   <div class="section">
-    <h2><span class="icon">🪵</span> Material</h2>
+    <h2><span class="icon"></span> Material</h2>
     <div class="field">
       <label>Materialquelle</label>
       <div class="radio-group" id="materialQuelle">
@@ -557,7 +557,7 @@
 
   <!-- GESTALTUNG -->
   <div class="section">
-    <h2><span class="icon">✏️</span> Gestaltung & Datenaufbereitung</h2>
+    <h2><span class="icon"></span> Gestaltung & Datenaufbereitung</h2>
     <div class="radio-group" id="gestaltung">
       <label class="radio-option selected" onclick="selectRadio('gestaltung', this, 0)">
         <input type="radio" name="gest" value="0" checked>
@@ -586,7 +586,7 @@
 
   <!-- GRAVURTIEFE -->
   <div class="section">
-    <h2><span class="icon">🎚️</span> Gravurtiefe & Laser-Einstellungen</h2>
+    <h2><span class="icon"></span> Gravurtiefe & Laser-Einstellungen</h2>
     <p style="font-size:12px;color:var(--muted);font-weight:300;margin-bottom:18px;line-height:1.7">
       Eichbasis: <strong style="color:var(--text)">Speed 4000 · Power 90% · Tiefe 100%</strong>. 
       Geringere Tiefe = höhere Geschwindigkeit = kürzere Gravurzeit = günstigerer Preis.
@@ -607,24 +607,24 @@
     <div class="laser-params" id="laserParams">
       <div class="lp-row">
         <div class="lp-card" id="lp_tiefe_card">
-          <div class="lp-icon">📏</div>
+          
           <div class="lp-label">Gravurtiefe</div>
           <div class="lp-value" id="lp_tiefe">100%</div>
         </div>
         <div class="lp-card">
-          <div class="lp-icon">⚡</div>
+          
           <div class="lp-label">Speed</div>
           <div class="lp-value" id="lp_speed">4000</div>
           <div class="lp-unit">mm/min</div>
         </div>
         <div class="lp-card">
-          <div class="lp-icon">🔆</div>
+          
           <div class="lp-label">Power</div>
           <div class="lp-value" id="lp_power">90</div>
           <div class="lp-unit">%</div>
         </div>
         <div class="lp-card">
-          <div class="lp-icon">🔁</div>
+          
           <div class="lp-label">Durchgänge</div>
           <div class="lp-value" id="lp_passes">1</div>
           <div class="lp-unit">Pass</div>
@@ -647,11 +647,11 @@
       <span class="amount">5,00 €</span>
     </div>
     <div class="line-item">
-      <span class="desc">🪵 Material</span>
+      <span class="desc">Material</span>
       <span class="amount" id="r_material">0,00 €</span>
     </div>
     <div class="line-item">
-      <span class="desc">✏️ Gestaltung</span>
+      <span class="desc">Gestaltung</span>
       <span class="amount" id="r_gestaltung">0,00 €</span>
     </div>
     <div class="total-row">
